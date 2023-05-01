@@ -23,29 +23,49 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Testing userData'),
       ),
-      body: userData.when(data: (data) {
-        return ListView.builder(
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text('${data[index].first_name} ${data[index].last_name}'),
-              subtitle: Text(data[index].email),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(data[index].avatar),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          userData.when(data: (data) {
+            return Expanded(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(
+                        '${data[index].first_name} ${data[index].last_name}'),
+                    subtitle: Text(data[index].email),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(data[index].avatar),
+                    ),
+                  );
+                },
+                itemCount: data.length,
               ),
             );
-          },
-          itemCount: data.length,
-        );
-      }, error: (error, stacktrace) {
-        return Center(
-          child: Text(
-            error.toString(),
-            style: const TextStyle(color: Colors.red),
+          }, error: (error, stacktrace) {
+            return Center(
+              child: Text(
+                error.toString(),
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          }, loading: () {
+            return const Center(child: CircularProgressIndicator());
+          }),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, 'StreamProviderScreen');
+            },
+            child: const Text('Go to StreamProviderScreen'),
           ),
-        );
-      }, loading: () {
-        return const Center(child: CircularProgressIndicator());
-      }),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, 'CounterScreen');
+            },
+            child: const Text('Go to Counter'),
+          ),
+        ],
+      ),
     );
   }
 }
